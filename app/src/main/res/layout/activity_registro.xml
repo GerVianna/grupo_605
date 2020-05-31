@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Registro"
+    tools:context="com.example.activities.Registro"
     android:background="#202732">
 
     <EditText
-        android:id="@+id/nombreRegistro"
+        android:id="@+id/nameReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/apellidoRegistro"
+        android:id="@+id/lastNameReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -42,10 +42,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nombreRegistro" />
+        app:layout_constraintTop_toBottomOf="@+id/nameReg" />
 
     <EditText
-        android:id="@+id/dniRegistro"
+        android:id="@+id/dniReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -60,10 +60,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/apellidoRegistro" />
+        app:layout_constraintTop_toBottomOf="@+id/lastNameReg" />
 
     <EditText
-        android:id="@+id/comisionRegistro"
+        android:id="@+id/commissionReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -77,10 +77,10 @@
         android:textColorHint="#59FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dniRegistro" />
+        app:layout_constraintTop_toBottomOf="@+id/dniReg" />
 
     <EditText
-        android:id="@+id/emailRegistro"
+        android:id="@+id/emailReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -94,10 +94,10 @@
         android:textColorHint="#59FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/comisionRegistro" />
+        app:layout_constraintTop_toBottomOf="@+id/commissionReg" />
 
     <EditText
-        android:id="@+id/passwordRegistro"
+        android:id="@+id/passwordReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -111,10 +111,10 @@
         android:textColorHint="#59FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailRegistro" />
+        app:layout_constraintTop_toBottomOf="@+id/emailReg" />
 
     <Button
-        android:id="@+id/botonRegistro"
+        android:id="@+id/regButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -127,5 +127,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordRegistro" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordReg" />
 </androidx.constraintlayout.widget.ConstraintLayout>

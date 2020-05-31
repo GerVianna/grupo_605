@@ -1,6 +1,4 @@
-package com.example.sensores;
-
-import android.app.Service;
+package com.example.services;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
