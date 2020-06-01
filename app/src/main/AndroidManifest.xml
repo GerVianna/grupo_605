@@ -14,8 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true" >
-        <activity android:name="com.example.activities.Home" />
-        <activity android:name="com.example.Sensors" />
 
         <meta-data
             android:name="com.google.android.actions"
@@ -35,6 +33,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.activities.Home" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.example.activities.Accelerometer">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.SECONDARY_HOME" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.example.activities.Proximity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.SECONDARY_HOME" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.example.activities.TableEvents">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.SECONDARY_HOME" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
