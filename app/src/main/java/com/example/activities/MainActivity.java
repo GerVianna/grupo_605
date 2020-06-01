@@ -15,7 +15,6 @@ import com.example.models.ResponseLogin;
 import com.example.sensores.R;
 import com.example.services.RetrofitClient;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                                 String token = response.body().getToken();
                                 Log.i("token", token);
 
-                                Intent sensor = new Intent(MainActivity.this, Sensors.class);
+                                Intent sensor = new Intent(MainActivity.this, Home.class);
                                 MainActivity.this.startActivity(sensor);
 
                             }else   Toast.makeText(MainActivity.this, response.errorBody().toString(),Toast.LENGTH_SHORT).show();
