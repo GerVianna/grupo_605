@@ -73,12 +73,16 @@ public class MainActivity extends AppCompatActivity {
                     call.enqueue(new Callback<ResponseLogin>() {
                         @Override
                         public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
-                            if(response.code() != 400){
+                            if(response.code() != 400) {
                                 response.body();
                                 String env = response.body().getEnv();
                                 String state = response.body().getState();
                                 String token = response.body().getToken();
                                 Log.i("token", token);
+
+                                Intent sensor = new Intent(MainActivity.this, Sensors.class);
+                                MainActivity.this.startActivity(sensor);
+
                             }else   Toast.makeText(MainActivity.this, response.errorBody().toString(),Toast.LENGTH_SHORT).show();
                         }
 
@@ -89,14 +93,14 @@ public class MainActivity extends AppCompatActivity {
                     });
                     break;
                 case R.id.goRegButton:
-                    startLoginActivity();
+                    startRegActivity();
                     break;
             }
         }
     };
 
 
-    private void startLoginActivity() {
+    private void startRegActivity() {
         Intent intent = new Intent(this, Registro.class);
         startActivity(intent);
     }
