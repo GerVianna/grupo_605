@@ -25,12 +25,16 @@ public class Home extends AppCompatActivity {
     private Button goAccelerometer;
     private Button goProximity;
     private Button goEvents;
+    private String token;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
+        Log.i("token", token);
         goAccelerometer = (Button) findViewById(R.id.buttonAcceler);
         goProximity = (Button) findViewById(R.id.buttonProx);
         goEvents = (Button) findViewById(R.id.buttonTableEvents);
@@ -43,6 +47,7 @@ public class Home extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent();
+            intent.putExtra("token", token);
             switch(v.getId()) {
                 case R.id.buttonAcceler:
                     intent.setClass(Home.this, Accelerometer.class);

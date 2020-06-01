@@ -77,12 +77,11 @@ public class MainActivity extends AppCompatActivity {
                                 String env = response.body().getEnv();
                                 String state = response.body().getState();
                                 String token = response.body().getToken();
-                                Log.i("token", token);
+                                Intent intent = new Intent(MainActivity.this, Home.class);
+                                intent.putExtra("token", token);
+                                MainActivity.this.startActivity(intent);
 
-                                Intent sensor = new Intent(MainActivity.this, Home.class);
-                                MainActivity.this.startActivity(sensor);
-
-                            }else   Toast.makeText(MainActivity.this, response.errorBody().toString(),Toast.LENGTH_SHORT).show();
+                            }else   Toast.makeText(MainActivity.this, "Datos incorrectos, verifique los datos ingresados",Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
