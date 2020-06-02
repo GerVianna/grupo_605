@@ -19,7 +19,16 @@ public class Event {
     @Expose
     private Integer group;
 
+
     private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public Event() {
         this.date = new Date();
