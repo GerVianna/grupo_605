@@ -58,7 +58,7 @@
                 <category android:name="android.intent.category.SECONDARY_HOME" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.activities.TableEvents">
+        <activity android:name="com.example.activities.ListEvents">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

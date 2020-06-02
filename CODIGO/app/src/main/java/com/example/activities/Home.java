@@ -9,17 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.models.LoginRequest;
-import com.example.models.ResponseLogin;
 import com.example.sensores.R;
-import com.example.services.RetrofitClient;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 public class Home extends AppCompatActivity {
 
     private Button goAccelerometer;
@@ -56,7 +48,7 @@ public class Home extends AppCompatActivity {
                     intent.setClass(Home.this, Proximity.class);
                     break;
                 case R.id.buttonTableEvents:
-                    intent.setClass(Home.this, TableEvents.class);
+                    intent.setClass(Home.this, ListEvents.class);
                     break;
             }
             startActivity(intent);

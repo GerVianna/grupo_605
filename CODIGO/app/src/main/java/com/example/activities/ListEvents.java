@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sensores.R;
 
-public class TableEvents extends AppCompatActivity {
+public class ListEvents extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
