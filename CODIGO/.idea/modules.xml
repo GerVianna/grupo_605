@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/CODIGO-Sensores.iml" filepath="$PROJECT_DIR$/CODIGO-Sensores.iml" group="Sensores" />
+      <module fileurl="file://$PROJECT_DIR$/app/CODIGO-app.iml" filepath="$PROJECT_DIR$/app/CODIGO-app.iml" group="Sensores/app" />
       <module fileurl="file://$PROJECT_DIR$/Sensores.iml" filepath="$PROJECT_DIR$/Sensores.iml" group="Sensores" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Sensores/app" />
     </modules>
