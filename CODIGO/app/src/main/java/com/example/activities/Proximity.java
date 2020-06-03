@@ -9,41 +9,45 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.models.Event;
 import com.example.models.ResponseEvent;
 import com.example.sensores.R;
 import com.example.services.RetrofitClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Proximity extends AppCompatActivity implements SensorEventListener {
-
+    TextView saveEventText;
+    ProgressBar savingEvent;
     SensorManager sensorManager;
     Sensor proximitySensor;
     String token = "";
     ArrayList<Event> list_events;
+    Toast toast;
     int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proximity);
+        saveEventText = (TextView) findViewById(R.id.saveEventText);
+        savingEvent = (ProgressBar) findViewById(R.id.savingEvent);
         loadEvent();
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        toast = new Toast(Proximity.this);
         if (proximitySensor == null)
             finish();
 
@@ -59,6 +63,15 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
+        toast.cancel();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
+        toast.cancel();
+        finish();
     }
 
     @Override
@@ -74,15 +87,16 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
                 .regEvent(token, "TEST", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
 
 
-
-
         if (distance > 0) {
             Log.i("RED", Float.toString(distance));
             getWindow().getDecorView().setBackgroundColor(Color.RED);
         } else {
             Log.i("GREEN", Float.toString(distance));
             getWindow().getDecorView().setBackgroundColor(Color.GREEN);
-            if (i == 0) {
+
+            if (savingEvent.getVisibility() != View.VISIBLE) {
+                savingEvent.setVisibility(View.VISIBLE);
+                saveEventText.setVisibility(View.VISIBLE);
                 call.enqueue(new Callback<ResponseEvent>() {
                     @Override
                     public void onResponse(Call<ResponseEvent> call, Response<ResponseEvent> response) {
@@ -91,11 +105,10 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
                             list_events.add(eventSaved);
                             saveEvent();
                             Toast.makeText(Proximity.this, "Evento registrado en el servidor", Toast.LENGTH_LONG).show();
-                            for (i = 10; i > 0; i--) {
-                                Toast.makeText(Proximity.this, "Proxima envio al servidor disponible en " + i, Toast.LENGTH_SHORT).show();
-                            }
+                            savingEvent.setVisibility(View.INVISIBLE);
+                            saveEventText.setVisibility(View.INVISIBLE);
                         } else
-                            Toast.makeText(Proximity.this, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Proximity.this, "Tiempo de espera terminado, vuelva a intentar nuevamente", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -103,6 +116,8 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
                         Toast.makeText(Proximity.this, t.toString(), Toast.LENGTH_SHORT).show(); // ALL NETWORK ERROR HERE
                     }
                 });
+            } else {
+                return;
             }
         }
     }

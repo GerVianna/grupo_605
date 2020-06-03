@@ -45,7 +45,7 @@ public class ListEvents extends AppCompatActivity {
             list_events = new ArrayList<>();
         } else {
             for (Event item: list_events) {
-                list_event_desc.add(item.getDescription() + "\n" + item.getTypeEvents() + "\n" + item.getDate().toString());
+                list_event_desc.add(item.getTypeEvents() + "\n" +item.getDescription() + "\n" + item.getDate().toString());
                 Log.i("item desc", item.getDescription() + "\n" + item.getTypeEvents());
                 adapter.notifyDataSetChanged();
             }

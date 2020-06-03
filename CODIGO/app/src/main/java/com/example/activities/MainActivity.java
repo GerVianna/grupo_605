@@ -2,48 +2,45 @@ package com.example.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.models.Event;
 import com.example.models.LoginRequest;
 import com.example.models.ResponseLogin;
+import com.example.receivers.NetworkState;
 import com.example.sensores.R;
 import com.example.services.RetrofitClient;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-
+    private BroadcastReceiver networkState;
     private EditText email;
     private EditText password;
     private Button login;
     private Button goReg;
-    ArrayList<Event> list_events;
+    private ProgressBar progressBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadEvent();
         email = (EditText) findViewById(R.id.emailField);
         password = (EditText) findViewById(R.id.passwordField);
         login = (Button) findViewById(R.id.loginButton);
         goReg = (Button) findViewById(R.id.goRegButton);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
         login.setOnClickListener(eventsButtons);
         goReg.setOnClickListener(eventsButtons);
     }
@@ -78,23 +75,21 @@ public class MainActivity extends AppCompatActivity {
                             .getService()
                             .loginUser(req.getEnv(), req.getName(), req.getLastName(), req.getDni(), req.getEmail(), req.getPassword(), req.getCommission(), req.getGroup());
 
-
+                    progressBar.setVisibility(View.VISIBLE);
                     call.enqueue(new Callback<ResponseLogin>() {
                         @Override
                         public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
                             if(response.code() != 400) {
-                                response.body();
-                                String env = response.body().getEnv();
-                                String state = response.body().getState();
                                 String token = response.body().getToken();
-                                Event event = new Event();
-                                event.setTypeEvents("LOGIN");
-                                event.setState("ACTIVO");
-                                event.setDescription("Usuario logueado en el sistema");
                                 Intent intent = new Intent(MainActivity.this, Home.class);
                                 intent.putExtra("token", token);
+                                progressBar.setVisibility(View.INVISIBLE);
                                 MainActivity.this.startActivity(intent);
-                            }else   Toast.makeText(MainActivity.this, "No fue posible realizar el login, intente nuevamente",Toast.LENGTH_SHORT).show();
+                                finish();
+                            }else  {
+                                password.setError("Correo electrónico o contraseña incorrecto/s");
+                                password.requestFocus();
+                            };
                         }
 
                         @Override
@@ -110,31 +105,43 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        networkState = new NetworkState();
+        IntentFilter intent = new IntentFilter();
+        intent.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver((BroadcastReceiver) networkState, intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterNetworkChanges();
+    }
+
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(networkState);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void startRegActivity() {
         Intent intent = new Intent(this, Registro.class);
         startActivity(intent);
+        unregisterNetworkChanges();
+        finish();
     }
 
-    private void saveEvent() {
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list_events);
-        editor.putString("list data", json);
-        editor.apply();
-    }
-
-    private void loadEvent() {
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("list data", null);
-        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-        list_events = gson.fromJson(json, type);
-
-        if (list_events == null) {
-            list_events = new ArrayList<>();
-        }
-    }
 
 }

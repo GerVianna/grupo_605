@@ -1,9 +1,17 @@
 package com.example.models;
 
+import android.widget.Toast;
+
+import com.example.activities.Proximity;
+import com.example.services.RetrofitClient;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Event {
     @SerializedName("type_events")
@@ -65,5 +73,7 @@ public class Event {
     public void setGroup(Integer group) {
         this.group = group;
     }
+
+
 
 }
