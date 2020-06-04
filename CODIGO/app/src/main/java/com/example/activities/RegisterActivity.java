@@ -23,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Registro extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     private EditText email;
     private EditText password;
@@ -93,14 +93,14 @@ public class Registro extends AppCompatActivity {
                     }
 
                     if (passwordField.length() < 8) {
-                        password.setError("La contraseña debe ser mínimo 8 caracteres");
+                        password.setError("La contraseña debe ser mínimo de 8 caracteres");
                         password.requestFocus();
                         return;
                     }
 
 
 
-                    LoginRequest req = new LoginRequest("TEST", nameField,  lastNameField, Integer.parseInt(dniField), emailField, passwordField, Integer.parseInt(commissionField));
+                    LoginRequest req = new LoginRequest("DEV", nameField,  lastNameField, Integer.parseInt(dniField), emailField, passwordField, Integer.parseInt(commissionField));
 
                     Call<LoginRequest> call = RetrofitClient
                             .getInstance()
@@ -112,11 +112,12 @@ public class Registro extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<LoginRequest> call, Response<LoginRequest> response) {
                             if (response.code() == 400) {
-                                Toast.makeText(Registro.this, "Error al registrar usuario, intente nuevamente", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, "Error al registrar usuario, intente nuevamente", Toast.LENGTH_LONG).show();
+                                return;
                             } else {
-                                Toast.makeText(Registro.this, "Usuario registrado correctamente", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, "Usuario registrado correctamente", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent();
-                                intent.setClass(Registro.this, MainActivity.class);
+                                intent.setClass(RegisterActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
                             }

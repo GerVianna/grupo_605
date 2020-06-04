@@ -84,7 +84,7 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
         Call<ResponseEvent> call = RetrofitClient
                 .getInstance()
                 .getService()
-                .regEvent(token, "TEST", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
+                .regEvent(token, "DEV", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
 
 
         if (distance > 0) {
@@ -108,7 +108,7 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
                             savingEvent.setVisibility(View.INVISIBLE);
                             saveEventText.setVisibility(View.INVISIBLE);
                         } else
-                            Toast.makeText(Proximity.this, "Tiempo de espera terminado, vuelva a intentar nuevamente", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Proximity.this, "No se pudo registrar el evento, vuelva a intentar nuevamente", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

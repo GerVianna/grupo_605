@@ -1,17 +1,10 @@
 package com.example.models;
 
-import android.widget.Toast;
 
-import com.example.activities.Proximity;
-import com.example.services.RetrofitClient;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Event {
     @SerializedName("type_events")
@@ -28,18 +21,19 @@ public class Event {
     private Integer group;
 
 
-    private Date date;
+    private String date;
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
     public Event() {
-        this.date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        this.date = dateFormat.format(new Date());
     }
 
     public String getTypeEvents() {

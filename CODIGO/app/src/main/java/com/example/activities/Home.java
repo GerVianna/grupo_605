@@ -55,7 +55,7 @@ public class Home extends AppCompatActivity {
         Call<ResponseEvent> call = RetrofitClient
                 .getInstance()
                 .getService()
-                .regEvent(token, "TEST", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
+                .regEvent(token, "DEV", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
         call.enqueue(new Callback<ResponseEvent>() {
                          @Override
                          public void onResponse(Call<ResponseEvent> call, Response<ResponseEvent> response) {
@@ -80,11 +80,9 @@ public class Home extends AppCompatActivity {
         builder.setTitle("Cerrar sesión");
         builder.setMessage("¿Desea cerrar la sesión y volver al login?");
 
-        // add the buttons
         builder.setPositiveButton("Cerrar Sesion", null);
         builder.setNegativeButton("Cancelar", null);
 
-        // create and show the alert dialog
         final AlertDialog dialog = builder.create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
