@@ -32,12 +32,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Accelerometer extends AppCompatActivity implements SensorEventListener{
-SensorManager sensorManager;
-Sensor accelerometerSensor;
-String token = "";
-ArrayList<Event> list_events;
-private Button goRegAccelerometer;
-float sensorValue;
+    SensorManager sensorManager;
+    Sensor accelerometerSensor;
+    String token = "";
+    ArrayList<Event> list_events;
+    private Button goRegAccelerometer;
+    float sensorValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,8 @@ float sensorValue;
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometerSensor == null)
             finish();
-      goRegAccelerometer = (Button) findViewById(R.id.btnRegEventA);
-      goRegAccelerometer.setOnClickListener(eventsButtons);
+        goRegAccelerometer = (Button) findViewById(R.id.btnRegEventA);
+        goRegAccelerometer.setOnClickListener(eventsButtons);
     }
 
     private View.OnClickListener eventsButtons = new View.OnClickListener(){
@@ -66,7 +66,7 @@ float sensorValue;
             Call<ResponseEvent> call = RetrofitClient
                     .getInstance()
                     .getService()
-                    .regEvent(token, "TEST", newEvent.getTypeEvents(),newEvent.getState(),newEvent.getDescription());
+                    .regEvent(token, "DEV", newEvent.getTypeEvents(),newEvent.getState(),newEvent.getDescription());
             call.enqueue(new Callback<ResponseEvent>(){
                 @Override
                 public void onResponse(Call<ResponseEvent> call, Response<ResponseEvent> response) {
@@ -77,7 +77,7 @@ float sensorValue;
                         Toast.makeText(Accelerometer.this, "Evento registrado en el servidor", Toast.LENGTH_LONG).show();
                     }
                     else
-                        Toast.makeText(Accelerometer.this, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Accelerometer.this, "No se pudo registrar el evento, vuelva a intentar nuevamente", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -87,6 +87,7 @@ float sensorValue;
             });
         }
     };
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -98,25 +99,34 @@ float sensorValue;
         super.onResume();
         sensorManager.registerListener(this,accelerometerSensor,2000*1000);
     }
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                getWindow().getDecorView().setBackgroundColor(Color.DKGRAY);
-                sensorValue = sensorEvent.values[0];
-                if (sensorValue < -2) {
-                    getWindow().getDecorView().setBackgroundColor(Color.RED);
-                    Log.d("X<-2", String.valueOf(sensorValue));
-                }
-                if (sensorValue > 2) {
-                    getWindow().getDecorView().setBackgroundColor(Color.GREEN);
-                    Log.d("X<2", String.valueOf(sensorValue));
-                }
-                if(sensorValue>-2 && sensorValue<2){
-                    getWindow().getDecorView().setBackgroundColor(Color.DKGRAY);
-                }
-            }
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-            }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
+        finish();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        getWindow().getDecorView().setBackgroundColor(Color.DKGRAY);
+        sensorValue = sensorEvent.values[0];
+        if (sensorValue < -2) {
+            getWindow().getDecorView().setBackgroundColor(Color.RED);
+            Log.d("X<-2", String.valueOf(sensorValue));
+        }
+        if (sensorValue > 2) {
+            getWindow().getDecorView().setBackgroundColor(Color.GREEN);
+            Log.d("X<2", String.valueOf(sensorValue));
+        }
+        if(sensorValue>-2 && sensorValue<2){
+            getWindow().getDecorView().setBackgroundColor(Color.DKGRAY);
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
     private void saveEvent(){
         SharedPreferences sharedPreferences = getSharedPreferences("PREFS",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -18,24 +18,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="37dp"
-                android:backgroundTint="#F3EEEE"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Eventos registrados"
-                android:textAlignment="textStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
             <ListView
                 android:id="@+id/listEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#F4F0F0"
+                android:background="@color/colorPrimaryDark"
                 android:backgroundTintMode="add"
                 android:cacheColorHint="#3F51B5"
                 android:dividerHeight="5sp"
