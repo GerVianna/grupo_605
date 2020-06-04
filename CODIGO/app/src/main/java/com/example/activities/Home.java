@@ -107,12 +107,6 @@ public class Home extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        finish();
-    }
-
     private View.OnClickListener eventsButtons = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

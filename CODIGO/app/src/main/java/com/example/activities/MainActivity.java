@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
         unregisterNetworkChanges();
-        finish();
     }
 
 

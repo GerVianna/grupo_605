@@ -105,14 +105,17 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
                             list_events.add(eventSaved);
                             saveEvent();
                             Toast.makeText(Proximity.this, "Evento registrado en el servidor", Toast.LENGTH_LONG).show();
-                            savingEvent.setVisibility(View.INVISIBLE);
-                            saveEventText.setVisibility(View.INVISIBLE);
-                        } else
+                        } else {
                             Toast.makeText(Proximity.this, "No se pudo registrar el evento, vuelva a intentar nuevamente", Toast.LENGTH_SHORT).show();
+                        }
+                        savingEvent.setVisibility(View.INVISIBLE);
+                        saveEventText.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onFailure(Call<ResponseEvent> call, Throwable t) {
+                        savingEvent.setVisibility(View.INVISIBLE);
+                        saveEventText.setVisibility(View.INVISIBLE);
                         Toast.makeText(Proximity.this, t.toString(), Toast.LENGTH_SHORT).show(); // ALL NETWORK ERROR HERE
                     }
                 });
