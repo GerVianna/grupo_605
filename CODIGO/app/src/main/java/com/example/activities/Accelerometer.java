@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Accelerometer extends AppCompatActivity implements SensorEventListener{
+    TextView saveEventText;
+    ProgressBar savingEvent;
     SensorManager sensorManager;
     Sensor accelerometerSensor;
     String token = "";
@@ -44,6 +48,8 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accelerometer);
         loadEvent();
+        saveEventText = (TextView) findViewById(R.id.saveEventText2);
+        savingEvent = (ProgressBar) findViewById(R.id.savingEvent2);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometerSensor == null)
@@ -67,6 +73,9 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
                     .getInstance()
                     .getService()
                     .regEvent(token, "DEV", newEvent.getTypeEvents(),newEvent.getState(),newEvent.getDescription());
+            saveEventText.setVisibility(View.VISIBLE);
+            savingEvent.setVisibility(View.VISIBLE);
+            goRegAccelerometer.setClickable(false);
             call.enqueue(new Callback<ResponseEvent>(){
                 @Override
                 public void onResponse(Call<ResponseEvent> call, Response<ResponseEvent> response) {
@@ -76,13 +85,20 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
                         saveEvent();
                         Toast.makeText(Accelerometer.this, "Evento registrado en el servidor", Toast.LENGTH_LONG).show();
                     }
-                    else
+                    else {
                         Toast.makeText(Accelerometer.this, "No se pudo registrar el evento, vuelva a intentar nuevamente", Toast.LENGTH_SHORT).show();
+                    }
+                    saveEventText.setVisibility(View.INVISIBLE);
+                    savingEvent.setVisibility(View.INVISIBLE);
+                    goRegAccelerometer.setClickable(true);
                 }
 
                 @Override
                 public void onFailure(Call<ResponseEvent> call, Throwable t) {
-                    Toast.makeText(Accelerometer.this, t.toString(), Toast.LENGTH_SHORT).show(); // ALL NETWORK ERROR HERE
+                    Toast.makeText(Accelerometer.this, "El servidor no respondió", Toast.LENGTH_SHORT).show(); // ALL NETWORK ERROR HERE
+                    saveEventText.setVisibility(View.INVISIBLE);
+                    savingEvent.setVisibility(View.INVISIBLE);
+                    goRegAccelerometer.setClickable(true);
                 }
             });
         }
@@ -109,7 +125,6 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        getWindow().getDecorView().setBackgroundColor(Color.DKGRAY);
         sensorValue = sensorEvent.values[0];
         if (sensorValue < -2) {
             getWindow().getDecorView().setBackgroundColor(Color.RED);
@@ -128,7 +143,7 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
     }
 
     private void saveEvent(){
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS",MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(list_events);

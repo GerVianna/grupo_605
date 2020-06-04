@@ -25,21 +25,24 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name="com.example.activities.MainActivity" >
+        <activity android:name="com.example.activities.MainActivity"
+                  android:screenOrientation="locked">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.activities.RegisterActivity" >
+        <activity android:name="com.example.activities.RegisterActivity"
+                  android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.activities.Home" >
+        <activity android:name="com.example.activities.Home"
+                  android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,6 +51,7 @@
         </activity>
         <activity
             android:name="com.example.activities.Accelerometer"
+            android:screenOrientation="locked"
            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,14 +59,16 @@
                 <category android:name="android.intent.category.SECONDARY_HOME" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.activities.Proximity">
+        <activity android:name="com.example.activities.Proximity"
+                  android:screenOrientation="locked">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.SECONDARY_HOME" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.activities.ListEvents">
+        <activity android:name="com.example.activities.ListEvents"
+                  android:screenOrientation="locked">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
