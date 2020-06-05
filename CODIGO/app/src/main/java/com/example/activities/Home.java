@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.models.Event;
+import com.example.models.GlobalUser;
 import com.example.models.ResponseEvent;
 import com.example.sensores.R;
 import com.example.services.RetrofitClient;
@@ -31,17 +32,14 @@ public class Home extends AppCompatActivity {
     private Button goAccelerometer;
     private Button goProximity;
     private Button goEvents;
-    private String token;
-    ArrayList<Event> list_events;
+    GlobalUser globalVariable;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Intent intent = getIntent();
-        token = intent.getStringExtra("token");
-        loadEvent();
+        globalVariable = (GlobalUser) getApplicationContext();
         goAccelerometer = (Button) findViewById(R.id.buttonAcceler);
         goProximity = (Button) findViewById(R.id.buttonProx);
         goEvents = (Button) findViewById(R.id.buttonTableEvents);
@@ -55,14 +53,14 @@ public class Home extends AppCompatActivity {
         Call<ResponseEvent> call = RetrofitClient
                 .getInstance()
                 .getService()
-                .regEvent(token, "DEV", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
+                .regEvent(globalVariable.getToken(), "DEV", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
         call.enqueue(new Callback<ResponseEvent>() {
                          @Override
                          public void onResponse(Call<ResponseEvent> call, Response<ResponseEvent> response) {
                              if (response.code() != 400 && response.code() != 401) {
                                  Event eventSaved = response.body().getEvent();
-                                 list_events.add(eventSaved);
-                                 saveEvent();
+                                 globalVariable.addEventToList(eventSaved);
+                                 globalVariable.saveEvent();
                              } else
                                  return;
                          }
@@ -97,6 +95,9 @@ public class Home extends AppCompatActivity {
                         Intent intent = new Intent();
                         intent.setClass(Home.this, MainActivity.class);
                         startActivity(intent);
+                        globalVariable.setEmail("");
+                        globalVariable.setToken("");
+                        globalVariable.setList_events(null);
                         finish();
                         dialog.dismiss();
                     }
@@ -111,7 +112,6 @@ public class Home extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent();
-            intent.putExtra("token", token);
             switch(v.getId()) {
                 case R.id.buttonAcceler:
                     intent.setClass(Home.this, Accelerometer.class);
@@ -126,28 +126,6 @@ public class Home extends AppCompatActivity {
             startActivity(intent);
         }
     };
-
-    private void saveEvent() {
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list_events);
-        editor.putString("list data", json);
-        editor.apply();
-    }
-
-    private void loadEvent() {
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("list data", null);
-        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-        list_events = gson.fromJson(json, type);
-
-        if (list_events == null) {
-            list_events = new ArrayList<>();
-        }
-    }
-
 
 
 }

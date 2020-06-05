@@ -32,7 +32,7 @@ public class Event {
     }
 
     public Event() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
         this.date = dateFormat.format(new Date());
     }
 

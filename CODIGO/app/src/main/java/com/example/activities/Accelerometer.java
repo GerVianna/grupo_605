@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.models.Event;
+import com.example.models.GlobalUser;
 import com.example.models.ResponseEvent;
 import com.example.sensores.R;
 import com.example.services.RetrofitClient;
@@ -38,8 +39,7 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
     ProgressBar savingEvent;
     SensorManager sensorManager;
     Sensor accelerometerSensor;
-    String token = "";
-    ArrayList<Event> list_events;
+    GlobalUser globalVariable;
     private Button goRegAccelerometer;
     float sensorValue;
 
@@ -47,7 +47,7 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accelerometer);
-        loadEvent();
+        globalVariable = (GlobalUser) getApplicationContext();
         saveEventText = (TextView) findViewById(R.id.saveEventText2);
         savingEvent = (ProgressBar) findViewById(R.id.savingEvent2);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -63,7 +63,6 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
         @Override
         public void onClick(View v) {
             Intent intent = getIntent();
-            token=intent.getStringExtra("token");
             Toast.makeText(Accelerometer.this, "Valor del sensor es " + sensorValue, Toast.LENGTH_SHORT).show();
             Event newEvent = new Event();
             newEvent.setDescription("Cambio de valor del sensor acelerometro registrado, nuevo valor: " + Float.toString(sensorValue));
@@ -72,7 +71,7 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
             Call<ResponseEvent> call = RetrofitClient
                     .getInstance()
                     .getService()
-                    .regEvent(token, "DEV", newEvent.getTypeEvents(),newEvent.getState(),newEvent.getDescription());
+                    .regEvent(globalVariable.getToken(), "DEV", newEvent.getTypeEvents(),newEvent.getState(),newEvent.getDescription());
             saveEventText.setVisibility(View.VISIBLE);
             savingEvent.setVisibility(View.VISIBLE);
             goRegAccelerometer.setClickable(false);
@@ -81,8 +80,8 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
                 public void onResponse(Call<ResponseEvent> call, Response<ResponseEvent> response) {
                     if(response.code()!= 400 && response.code() != 401){
                         Event eventSaved = response.body().getEvent();
-                        list_events.add(eventSaved);
-                        saveEvent();
+                        globalVariable.addEventToList(eventSaved);
+                        globalVariable.saveEvent();
                         Toast.makeText(Accelerometer.this, "Evento registrado en el servidor", Toast.LENGTH_LONG).show();
                     }
                     else {
@@ -142,25 +141,5 @@ public class Accelerometer extends AppCompatActivity implements SensorEventListe
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    private void saveEvent(){
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list_events);
-        editor.putString("list data", json);
-        editor.apply();
-    }
-
-    private void loadEvent(){
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("list data", null);
-        Type type = new TypeToken<ArrayList<Event>>(){}.getType();
-        list_events = gson.fromJson(json, type);
-
-        if(list_events == null){
-            list_events = new ArrayList<>();
-        }
-    }
 
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.models.Event;
+import com.example.models.GlobalUser;
 import com.example.models.ResponseEvent;
 import com.example.sensores.R;
 import com.example.services.RetrofitClient;
@@ -31,10 +32,8 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
     ProgressBar savingEvent;
     SensorManager sensorManager;
     Sensor proximitySensor;
-    String token = "";
-    ArrayList<Event> list_events;
     Toast toast;
-    int i = 0;
+    GlobalUser globalVariable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +41,7 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
         setContentView(R.layout.activity_proximity);
         saveEventText = (TextView) findViewById(R.id.saveEventText);
         savingEvent = (ProgressBar) findViewById(R.id.savingEvent);
-        loadEvent();
-        Intent intent = getIntent();
-        token = intent.getStringExtra("token");
+        globalVariable = (GlobalUser) getApplicationContext();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         toast = new Toast(Proximity.this);
@@ -84,7 +81,7 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
         Call<ResponseEvent> call = RetrofitClient
                 .getInstance()
                 .getService()
-                .regEvent(token, "DEV", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
+                .regEvent(globalVariable.getToken(), "DEV", newEvent.getTypeEvents(), newEvent.getState(), newEvent.getDescription());
 
 
         if (distance > 0) {
@@ -102,8 +99,8 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
                     public void onResponse(Call<ResponseEvent> call, Response<ResponseEvent> response) {
                         if (response.code() != 400 && response.code() != 401) {
                             Event eventSaved = response.body().getEvent();
-                            list_events.add(eventSaved);
-                            saveEvent();
+                            globalVariable.addEventToList(eventSaved);
+                            globalVariable.saveEvent();
                             Toast.makeText(Proximity.this, "Evento registrado en el servidor", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(Proximity.this, "No se pudo registrar el evento, vuelva a intentar nuevamente", Toast.LENGTH_SHORT).show();
@@ -130,26 +127,6 @@ public class Proximity extends AppCompatActivity implements SensorEventListener 
         // Do something here if sensor accuracy changes.
     }
 
-    private void saveEvent() {
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list_events);
-        editor.putString("list data", json);
-        editor.apply();
-    }
-
-    private void loadEvent() {
-        SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("list data", null);
-        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-        list_events = gson.fromJson(json, type);
-
-        if (list_events == null) {
-            list_events = new ArrayList<>();
-        }
-    }
 
 
 }
