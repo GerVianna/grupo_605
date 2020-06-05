@@ -8,17 +8,22 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.models.Event;
+import com.example.models.GlobalUser;
 import com.example.models.LoginRequest;
 import com.example.models.ResponseLogin;
 import com.example.receivers.NetworkState;
 import com.example.sensores.R;
 import com.example.services.RetrofitClient;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,12 +36,14 @@ public class MainActivity extends AppCompatActivity {
     private Button login;
     private Button goReg;
     private ProgressBar progressBar;
+    GlobalUser globalVariable;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        globalVariable = (GlobalUser) getApplicationContext();
         email = (EditText) findViewById(R.id.emailField);
         password = (EditText) findViewById(R.id.passwordField);
         login = (Button) findViewById(R.id.loginButton);
@@ -48,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private View.OnClickListener eventsButtons = new View.OnClickListener() {
         public void onClick (View v) {
-            String emailField = email.getText().toString().trim();
+            final String emailField = email.getText().toString().trim();
             String passwordField = password.getText().toString().trim();
             switch (v.getId()) {
                 case R.id.loginButton:
@@ -82,8 +89,10 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
                             if(response.code() != 400) {
                                 String token = response.body().getToken();
+                                globalVariable.setEmail(emailField);
+                                globalVariable.setToken(token);
+                                globalVariable.loadEvent();
                                 Intent intent = new Intent(MainActivity.this, Home.class);
-                                intent.putExtra("token", token);
                                 progressBar.setVisibility(View.INVISIBLE);
                                 MainActivity.this.startActivity(intent);
                                 finish();
